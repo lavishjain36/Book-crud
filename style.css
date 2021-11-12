@@ -1,0 +1,44 @@
+* {
+  float: left;
+}
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.profilepic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+.main {
+  display: flex;
+  background: whitesmoke;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 20rem;
+  box-shadow: 10px 10px 36px 0px rgba(68, 255, 61, 0.959);
+}
+.description p:nth-child(1) {
+  margin: 0;
+  padding-left: 1rem;
+}
+.description p:nth-child(2) {
+  margin: 0;
+  padding-left: 1rem;
+}
+.description button {
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+}
+.main:hover {
+  cursor: pointer;
+  background: rgb(34, 193, 195);
+  background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 1) 0%,
+    rgba(36, 194, 195, 0.7598389697675946) 0%,
+    rgba(255, 251, 241, 1) 100%
+  );
+  transform: scale(1.05);
+  transition: transform 0.5s;
+}
