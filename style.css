@@ -2,43 +2,49 @@
   float: left;
 }
 body {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-.profilepic {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-}
-.main {
-  display: flex;
-  background: whitesmoke;
-  margin: 1rem;
-  padding: 1rem;
-  border-radius: 10px;
-  width: 20rem;
-  box-shadow: 10px 10px 36px 0px rgba(68, 255, 61, 0.959);
-}
-.description p:nth-child(1) {
-  margin: 0;
-  padding-left: 1rem;
-}
-.description p:nth-child(2) {
-  margin: 0;
-  padding-left: 1rem;
-}
-.description button {
-  margin-left: 1rem;
-  margin-top: 0.5rem;
-}
-.main:hover {
-  cursor: pointer;
-  background: rgb(34, 193, 195);
-  background: linear-gradient(
-    0deg,
-    rgba(34, 193, 195, 1) 0%,
-    rgba(36, 194, 195, 0.7598389697675946) 0%,
-    rgba(255, 251, 241, 1) 100%
+  background-image: linear-gradient(
+    to right top,
+    #87d16b,
+    #3bb882,
+    #009b8e,
+    #007c88,
+    #265d71,
+    #36566e,
+    #434e67,
+    #4b475d,
+    #67506c,
+    #865773,
+    #a55f73,
+    #bf6b6b
   );
-  transform: scale(1.05);
-  transition: transform 0.5s;
+}
+.user-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.user-container {
+  display: flex;
+  gap: 26px;
+  padding: 15px;
+  background: white;
+  margin: 30px;
+  border-radius: 10px;
+  min-width: 450px;
+  transition: 0.2s all;
+}
+.user-container:hover {
+  transform: scale(1.1);
+  color: red;
+}
+
+.image {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+}
+.text {
+  font-family: "Roboto Mono", monospace;
+  /*   font-weight:3000; */
 }

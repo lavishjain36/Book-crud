@@ -9,9 +9,12 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <input type="text" class="name" placeholder="Username" />
-    <input type="text" class="urllink" placeholder="Profile picture" />
-    <button class="editing" onclick="adduser()">Add user</button>
-    <section class="user-list"></section>
+    <section>
+      <input class="add-user-name" placeholder="Enter username" />
+      <input class="add-user-avatar" placeholder="Enter avatar url" />
+      <button class="editing" onclick="addUser()">Add User</button>
+    </section>
+
+    <div class="user-list"></div>
   </body>
 </html>
