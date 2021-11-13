@@ -1,133 +1,71 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const bookContainer = document.querySelector("#book-container");
-  const bookURL = `http://localhost:3000/books`;
-  const bookForm = document.querySelector("#book-form");
-  let allBooks = [];
+var url = "https://618fa913f6bf4500174849cd.mockapi.io/users";
 
-  fetch(`${bookURL}`)
-    .then((response) => response.json())
-    .then((bookData) =>
-      bookData.forEach(function (book) {
-        allBooks = bookData;
-        bookContainer.innerHTML += `
-        <div id=book-${book.id}>
-          <h2>${book.title}</h2>
-          <h4>Author: ${book.author}</h4>
-          <img src="${book.coverImage}" width="333" height="500">
-          <p>${book.description}</p>
-          <button data-id=${book.id} id="edit-${book.id}" data-action="edit">Edit</button>
-          <button data-id=${book.id} id="delete-${book.id}" data-action="delete">Delete</button>
-        </div>
-        <div id=edit-book-${book.id}>
-        </div>`;
-      })
-    ); // end of book fetch
+//Read the data
 
-  bookForm.addEventListener("submit", (e) => {
-    event.preventDefault();
+function getData() {
+  fetch(url)
+    .then((result) => result.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log(err));
+}
 
-    const titleInput = bookForm.querySelector("#title").value;
-    const authorInput = bookForm.querySelector("#author").value;
-    const coverImageInput = bookForm.querySelector("#coverImage").value;
-    const descInput = bookForm.querySelector("#description").value;
+// getData();
 
-    fetch(`${bookURL}`, {
-      method: "POST",
-      body: JSON.stringify({
-        title: titleInput,
-        author: authorInput,
-        coverImage: coverImageInput,
-        description: descInput,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((book) => {
-        allBooks.push(book);
-        bookContainer.innerHTML += `
-          <div id=book-${book.id}>
-            <h2>${book.title}</h2>
-            <h4>Author: ${book.author}</h4>
-            <img src="${book.coverImage}" width="333" height="500">
-            <p>${book.description}</p>
-            <button data-id=${book.id} id="edit-${book.id}" data-action="edit">Edit</button>
-            <button data-id=${book.id} id="delete-${book.id}" data-action="delete">Delete</button>
-          </div>
-          <div id=edit-book-${book.id}>
-          </div>`;
-      });
-  }); // end of eventListener for adding a book
+//create =the data with post
+function createData() {
+  let data = {
+    name: "Lavish Jain",
+    email: "lavish@guvi.in",
+  };
 
-  bookContainer.addEventListener("click", (e) => {
-    if (e.target.dataset.action === "edit") {
-      const editButton = document.querySelector(`#edit-${e.target.dataset.id}`);
-      editButton.disabled = true;
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((result) => result.json())
+    .then((data) => console.log(data))
+    .catch((err) => console.log(err));
+}
 
-      const bookData = allBooks.find((book) => {
-        return book.id == e.target.dataset.id;
-      });
+createData();
+// getData();
 
-      const editForm = bookContainer.querySelector(
-        `#edit-book-${e.target.dataset.id}`
-      );
-      editForm.innerHTML = `
-          <form class='form' id='edit-book' action='index.html' method='post'>
-            <form id="book-form">
-              <input required id="edit-title" placeholder="${bookData.title}">
-              <input required id="edit-author" placeholder="${bookData.author}">
-              <input required id="edit-coverImage" placeholder="${bookData.coverImage}">
-              <input required id="edit-description" placeholder="${bookData.description}">
-              <input type="submit" value="Edit Book">
-          </form>`;
+//update=>http method is put
+// i have to update data with id =12
+function updateData() {
+  let data = {
+    name: "swapnil",
+    email: "swapnil@gmail.com",
+  };
 
-      editForm.addEventListener("submit", (e) => {
-        event.preventDefault();
+  fetch(url + "/2", {
+    method: "PUT",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+    },
+  })
+    .then((result) => result.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
+}
 
-        const titleInput = document.querySelector("#edit-title").value;
-        const authorInput = document.querySelector("#edit-author").value;
-        const coverImageInput =
-          document.querySelector("#edit-coverImage").value;
-        const descInput = document.querySelector("#edit-description").value;
-        const editedBook = document.querySelector(`#book-${bookData.id}`);
+updateData();
 
-        fetch(`${bookURL}/${bookData.id}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            title: titleInput,
-            author: authorInput,
-            coverImage: coverImageInput,
-            description: descInput,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response) => response.json())
-          .then((book) => {
-            editedBook.innerHTML = `
-              <div id=book-${book.id}>
-                <h2>${book.title}</h2>
-                <h4>Author: ${book.author}</h4>
-                <img src="${book.coverImage}" width="333" height="500">
-                <p>${book.description}</p>
-                <button data-id=${book.id} id="edit-${book.id}" data-action="edit">Edit</button>
-                <button data-id=${book.id} id="delete-${book.id}" data-action="delete">Delete</button>
-              </div>
-              <div id=edit-book-${book.id}>
-              </div>`;
-            editForm.innerHTML = "";
-          });
-      }); // end of this event Listener for edit submit
-    } else if (e.target.dataset.action === "delete") {
-      document.querySelector(`#book-${e.target.dataset.id}`).remove();
-      fetch(`${bookURL}/${e.target.dataset.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((response) => response.json());
-    }
-  }); // end of eventListener for editing and deleting a book
-});
+getData();
+
+//Delete=>
+// delete a particular data=>http DELETE
+function deleteData() {
+  fetch(url + "/6", {
+    method: "DELETE",
+  })
+    .then((result) => result.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
+}
+
+deleteData();
