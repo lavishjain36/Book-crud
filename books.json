@@ -1,11 +1,18 @@
 {
   "books": [
     {
-      "title": "Python",
-      "author": "kk",
-      "coverImage": "https://images-na.ssl-images-amazon.com/images/I/51DRU47eBbL._SX218_BO1,204,203,200_QL40_ML2_.jpg",
-      "description": "good",
-      "id": 3
+      "title": "Javascript",
+      "author": "Mrijn",
+      "coverImage": "https://miro.medium.com/max/1200/1*zBRkcBbsjWzcPjtcxqhb3Q.jpeg",
+      "description": "One of the best book ",
+      "id": 2
+    },
+    {
+      "title": "dgdg",
+      "author": "dggdg",
+      "coverImage": "sffsfs",
+      "description": "sggs",
+      "id": 4
     }
   ]
 }
