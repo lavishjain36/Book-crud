@@ -1,71 +1,112 @@
-var url = "https://618fa913f6bf4500174849cd.mockapi.io/users";
+document.addEventListener("DOMContentLoaded", () => {
+  const addBtn = document.querySelector("#new-toy-btn");
+  const toyForm = document.querySelector(".container");
+  const toyCollection = document.getElementById("toy-collection");
+  let addToy = false;
 
-//Read the data
+  const API_URL = "http://localhost:3000/toys";
 
-function getData() {
-  fetch(url)
-    .then((result) => result.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err));
-}
+  function renderToy(toy) {
+    //create a new Div and attach it to the DOM
+    let toyDiv = document.createElement("div");
+    toyDiv.className = "card";
+    toyDiv.innerHTML = `
+    <h2>${toy.name}</h2>
+    <img src='${toy.image}' class="toy-avatar" />
+    <p>${toy.likes} Likes </p>
+    <button data-id='${toy.id}' class="like-btn">Like <3</button>
+    <button data-id='${toy.id}' class="delete-btn">Delete X</button>
+    `;
+    toyCollection.appendChild(toyDiv);
+  }
 
-// getData();
+  function renderAll(toys) {
+    toyCollection.innerHTML = "";
+    // For each toy render it to the DOM
+    toys.forEach((toy) => {
+      renderToy(toy);
+    });
+  }
 
-//create =the data with post
-function createData() {
-  let data = {
-    name: "Lavish Jain",
-    email: "lavish@guvi.in",
-  };
+  fetch(API_URL)
+    .then(function (resp) {
+      // resp in this case is the response from the server
+      // This comes in the form of a promise object,
+      // we must parse this into usable data
+      return resp.json();
+    })
+    .then((toys) => {
+      // toys is an array that is taken from the promise object that came in the response
+      renderAll(toys);
+    });
 
-  fetch(url, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-    },
-  })
-    .then((result) => result.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.log(err));
-}
+  addBtn.addEventListener("click", () => {
+    // hide & seek with the form
+    addToy = !addToy;
+    if (addToy) {
+      toyForm.style.display = "block";
+      // submit listener here
+    } else {
+      toyForm.style.display = "none";
+    }
+  });
 
-createData();
-// getData();
+  toyForm.addEventListener("click", (e) => {
+    let toyName = document.getElementsByClassName("input-text")[0].value;
+    let toyUrl = document.getElementsByClassName("input-text")[1].value;
+    // data stores the data that is passed in by the user as an object
+    data = { name: toyName, image: toyUrl, likes: 0 };
 
-//update=>http method is put
-// i have to update data with id =12
-function updateData() {
-  let data = {
-    name: "swapnil",
-    email: "swapnil@gmail.com",
-  };
+    e.preventDefault();
+    if (e.target.name === "submit") {
+      fetch(`${API_URL}`, {
+        // change the default method from GET to POST
+        method: "POST",
+        // Tells the server we are sending in json
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // sends the data from an object to a json
+        body: JSON.stringify(data),
+      })
+        .then((resp) => resp.json())
+        .then((toy) => renderToy(toy));
+      //then we render the response from the API
+    }
+  });
 
-  fetch(url + "/2", {
-    method: "PUT",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-    },
-  })
-    .then((result) => result.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.log(error));
-}
+  toyCollection.addEventListener("click", (e) => {
+    //checks to see if the button is a like
+    if (e.target.className === "like-btn") {
+      // like stores the number from the innertext of the like amount
+      let id = parseInt(e.target.dataset.id);
+      let like = parseInt(e.target.previousElementSibling.innerText);
+      like++;
 
-updateData();
+      let data = { likes: like };
 
-getData();
+      e.target.previousElementSibling.innerText = `${like} likes`;
 
-//Delete=>
-// delete a particular data=>http DELETE
-function deleteData() {
-  fetch(url + "/6", {
-    method: "DELETE",
-  })
-    .then((result) => result.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.log(error));
-}
+      fetch(`${API_URL}/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+    } else if (e.target.className === "delete-btn") {
+      let id = parseInt(e.target.dataset.id);
+      //parent holds the parent node of the button
+      let parent = event.target.parentNode;
+      // this removes the parent which is the current card.
+      parent.remove();
 
-deleteData();
+      fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+  });
+});
